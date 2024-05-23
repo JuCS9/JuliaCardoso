@@ -3,12 +3,12 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 
 const app = express();
-const port = 4000;
+const port = 3000;
 
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'julia',
-    password: 'SENAI123',
+    password: '',
     database: 'login'
 });
 
@@ -24,6 +24,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + '/login.html');
+});
+
+app.get("/cadastro", (req, res) => {
+    res.sendFile(__dirname + '/cadastro.html');
 });
 
 app.post("/login", (req, res) => {
@@ -50,6 +54,22 @@ app.post("/login", (req, res) => {
     });
 });
 
+app.post("/cadastro", (req, res) => {
+    const username = req.body.usuario;
+    const password = req.body.senha;
+
+    db.query('INSERT INTO user (username, password) VALUES (?, ?)', [username, password], (error, results) => {
+        if (error) {
+            console.log("Erro ao inserir usuário no banco de dados:", error);
+            res.status(500).send("Erro interno do servidor");
+        } else {
+                console.log("Usuário cadastrado com sucesso!");
+                res.send("Usuário cadastrado com sucesso!");
+        }
+    });
+});
+
 app.listen(port, () => {
     console.log(`Servidor rodando no endereço http://localhost:${port}`);
 });
+
