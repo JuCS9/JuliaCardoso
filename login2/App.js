@@ -57,13 +57,7 @@ app.post("/login", (req, res) => {
 app.post("/cadastro", (req, res) => {
     const username = req.body.usuario;
     const password = req.body.senha;
-    const confirmPassword = req.body.confirme_senha;
 
-    if (password !== confirmPassword) {
-        console.log("As senhas não coincidem!");
-        res.send("As senhas não coincidem!");
-        return;
-    }
 
    
     db.query('SELECT username FROM user WHERE username = ?', [username], (error, results) => {
@@ -91,4 +85,5 @@ app.post("/cadastro", (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor rodando no endereço http://localhost:${port}`);
 });
+
 
