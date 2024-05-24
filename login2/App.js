@@ -8,7 +8,7 @@ const port = 3000;
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'julia',
-    password: '',
+    password: 'SENAI123',
     database: 'login'
 });
 
@@ -57,14 +57,33 @@ app.post("/login", (req, res) => {
 app.post("/cadastro", (req, res) => {
     const username = req.body.usuario;
     const password = req.body.senha;
+    const confirmPassword = req.body.confirme_senha;
 
-    db.query('INSERT INTO user (username, password) VALUES (?, ?)', [username, password], (error, results) => {
+    if (password !== confirmPassword) {
+        console.log("As senhas não coincidem!");
+        res.send("As senhas não coincidem!");
+        return;
+    }
+
+   
+    db.query('SELECT username FROM user WHERE username = ?', [username], (error, results) => {
         if (error) {
-            console.log("Erro ao inserir usuário no banco de dados:", error);
+            console.log("Erro na consulta ao banco de dados:", error);
             res.status(500).send("Erro interno do servidor");
+        } else if (results.length > 0) {
+            console.log("Usuário já existe!");
+            res.send("Usuário já existe!");
         } else {
-                console.log("Usuário cadastrado com sucesso!");
-                res.send("Usuário cadastrado com sucesso!");
+    
+            db.query('INSERT INTO user (username, password) VALUES (?, ?)', [username, password], (error, results) => {
+                if (error) {
+                    console.log("Erro ao inserir usuário no banco de dados:", error);
+                    res.status(500).send("Erro interno do servidor");
+                } else {
+                    console.log("Usuário cadastrado com sucesso!");
+                    res.send("Usuário cadastrado com sucesso!");
+                }
+            });
         }
     });
 });
