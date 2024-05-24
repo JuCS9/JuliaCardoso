@@ -19,6 +19,10 @@
       cursor: pointer;
       outline: none;
     }
+
+    .alert{
+      color:red
+    }
   </style>
 </head>
 <body>
@@ -28,7 +32,7 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title text-center">Cadastro</h5>
-          <form action="/cadastro" method="POST">
+          <form action="/cadastro" method="POST" id="cadastroForm">
             <div class="form-group">
               <label for="username">Usuário</label>
               <input type="text" class="form-control" id="username" name="usuario" placeholder="Insira o nome de usuário" required>
@@ -37,7 +41,7 @@
               <label for="password">Senha</label>
               <input type="password" class="form-control" id="password" name="senha" placeholder="Senha" required>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="confirm-group">
               <label for="confirme_senha">Confirme a Senha</label>
               <input type="password" class="form-control" id="confirme_senha" name="confirme_senha" placeholder="Confirme a senha" required>
             </div>
@@ -51,6 +55,29 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.getElementById("cadastroForm").addEventListener("submit", function(event){
+
+    const existingAlert = document.querySelector("#confirm-group .alert");
+  if (existingAlert) {
+    existingAlert.remove();
+  }
+
+    const password = document.getElementById("password").value;
+    const confirm = document.getElementById("confirme_senha").value;
+  
+  if (password !== confirm){ // ! = diferente
+    let span = document.createElement("span");
+     span.classList.add("alert");
+     span.textContent = "As senhas não coincidem";
+     document.getElementById("confirm-group").appendChild(span);
+     event.preventDefault();
+  }
+
+
+  })
+</script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
